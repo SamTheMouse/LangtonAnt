@@ -1,0 +1,22 @@
+#field {
+    max-height: 100vh;
+    max-width: 100vw;
+    --resolution: 10px;
+}
+
+.cell {
+    width: var(--resolution);
+    height: var(--resolution);
+}
+
+.cell.up {
+    background-color: black;
+}
+
+/* .cell.down {
+    background-color: white;
+} */
+
+.cell#ant {
+    background-color: red !important; 
+}

@@ -1,0 +1,62 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+header {
+    padding: 1em;
+}
+
+section {
+    min-height: 100vh;
+}
+
+footer {
+    color: white;
+    background-color: black;
+    padding: 1em;
+}
+
+.center {
+    text-align: center;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+table tr, table td {
+    border: solid grey 1px;
+}
+
+.hidden {
+    display: none;
+}
+
+.container {
+    display: flex;
+}
+
+.container.row {
+    flex-direction: row;
+}
+
+.container.column {
+    flex-direction: column;
+}
+
+#controls {
+    padding: 1em;
+}
+
+button {
+    margin: 5px;
+}
+
+button, input {
+    
+}

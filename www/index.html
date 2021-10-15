@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Langton's Ant</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/langton.css">
+</head>
+<body>
+    <header>
+        <h1>Langton's ant</h1>
+    </header>
+    <section>
+        <div id="controls">
+            <div class="container row">
+                <div class="container row">
+                    <button id="play">play</button>
+                    <button id="pause" class="hidden">pause</button>
+                    <button id="next">next</button>
+                    <button id="reset">reset</button>
+                </div>
+                <div class="slider">
+                    <input type="range" name="speed" id="speed">
+                </div>
+            </div>
+        </div>
+        <table id="field">
+
+        </table>
+        <script src=""></script>
+    </section>
+    <footer>
+        <p id="copyright" class="center">
+            &#127279; <!--unicode copyleft symbol--> 2021 - Samuel ORTION
+        </p>
+    </footer>
+    <script src="scripts/Ant.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/action.js"></script>
+</body>
+</html>
