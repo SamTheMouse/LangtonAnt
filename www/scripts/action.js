@@ -25,3 +25,11 @@ reset_button.addEventListener('click', function () {
     ant_stop();
     ant_reset();
 });
+
+
+let speed_slider = document.getElementById('speed');
+
+speed_slider.addEventListener('click', function() {
+    let speed_value = speed_slider.value;
+    setUpSpeed(speed_value);
+});

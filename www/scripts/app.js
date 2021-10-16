@@ -1,125 +1,87 @@
 let resolution = 10 // px per case of the field
 
-let default_cell_state = DOWN;
+let interval = undefined;
 
 let size2cell = (size, resolution) => Math.floor(size / resolution);
 
-const table_size = {
-    width: size2cell(window_size.innerWidth, resolution),
-    height: size2cell(window_size.innerHeight, resolution)
+let table_size = {
+    width: size2cell(window.innerWidth, resolution),
+    height: size2cell(window.innerHeight, resolution)
 }
 
-let field_table = createFieldTable(resolution, {width: table_size.width, height: table_size.height});
+let initial_pos = {
+    x: Math.floor(table_size.width / 2),
+    y: Math.floor(table_size.height / 2)
+};
 
-const initial_pos = {
-    x: Math.floor(field_table[0].length / 2),
-    y: Math.floor(field_table.length / 2)
-}
+let field = document.getElementById('field');
 
-let field_element = document.getElementById('field');
+createTable(field, {
+    n_col: table_size.width,
+    n_row: table_size.height
+});
 
-let interval = undefined;
-
-field_element = createHtmlTable(field_element, field_table);
-
-let myAnt = new Ant({x: initial_pos.x, y: initial_pos.y}, field_element);
-
-drawAnt({x: myAnt.pos.x, y: myAnt.pos.y}, field_element);
-
-function createFieldTable(resolution, {n_col: width, n_row: height} ) {
-    let table = []
+function createTable(parent, { n_col, n_row }) {
+    let table = document.createElement('table');
     for (let j = 0; j < n_row; j++) {
-        let row = [];
+        let row = document.createElement('tr');
         for (let i = 0; i < n_col; i++) {
-            let cell = default_cell_state;
-            row.push(cell);
+            let cell = document.createElement('td');
+            row.appendChild(cell);
         }
-        table.push(row);
+        table.appendChild(row);
     }
-    return table;
+    parent.appendChild(table);
 }
 
-function createHtmlTable(field_element, field_table) {   
-    for (let i = 0; i < field_table.length; i++) {
-        let row_element = document.createElement('tr');
-        for (let j = 0; j < field_table[i].length; j++) {
-            let cell_element = document.createElement('td');
-            cell_element.classList.add('cell');
-            row_element.appendChild(cell_element);
+let table = field.firstChild;
+
+function forEachCell(table, action) {
+    let rows = table.childNodes;
+    for (row of rows) {
+        let cells = row.childNodes;
+        for (cell of cells) {
+            action(cell);
         }
-        field_element.appendChild(row_element);
     }
 }
 
-function UpdateHtmlTable(field_element, table_field) {
-    let j = 0;
-    const max_j = field_table.length;
-    const max_i = field_table[0].length;
-    field_element.childNodes.forEach(tr => {
-        let i = 0;
-        tr.childNodes.forEach(td => {
-            if (i < max_i && j < max_j) {
-                // console.log(`cell at (${i}, ${j})`);
-                let cell = table_field[j][i];
-                if (isUp(cell))
-                {
-                    if (! td.classList.contains('up')) {
-                        td.classList.add('up');
-                    }
-                } else {
-                    td.classList.remove('up');
-                }
-                i++;
-            } else {
-                return;
-            }
-        });
-        j++;
-    });
-}
+forEachCell(table, (cell) => cell.classList.add('cell'));
 
-function isUp(cell) {
-    return cell == UP;
-}
+let myAnt = new Ant({x: initial_pos.x, y: initial_pos.y}, table);
 
-function drawAnt({x, y}, field_element) {
-     
-    let previous_ant = document.getElementById('ant');
-    if (previous_ant != null) {
-        // clear previous ant
-        previous_ant.removeAttribute('id');
-    }
-    let next_ant_cell = field_element.childNodes[y].childNodes[x];
-    // draw new ant
-    next_ant_cell.id = 'ant';
-}
+myAnt.draw();
 
-function nextState() {
+function next() {
     myAnt.update();
-    drawAnt(myAnt.pos, field_element);
-    UpdateHtmlTable(field_element, field_table);
-    if (myAnt.isOut(field_table[0].length, field_table.length)) {
-        window.clearInterval(loop);
-    }
+    myAnt.draw();
 }
 
 function ant_start() {
-    interval = setInterval(nextState, 10);
+    let dt = 1 / document.getElementById('speed').value;
+    interval = setInterval(next, 100);
 }
-
 
 function ant_stop() {
     clearInterval(interval);
 }
 
-
 function ant_next() {
-    nextState();
+    next();
+    if (myAnt.isOut(table_size.width, table_size.height)) {
+        ant_stop();
+    }
 }
 
 function ant_reset() {
-    field_table = createFieldTable(resolution, size.x, size.y);
-    myAnt = new Ant(initial_pos.x, initial_pos.y, field_table);
-    UpdateHtmlTable(field_element, field_table);
-    drawAnt(myAnt, field_element);
+    forEachCell(table, (cell) => cell.classList.remove('up'));
+    myAnt.resetPos({x: initial_pos.x, y: initial_pos.y});
+    myAnt.draw();
+}
+
+
+function setUpSpeed(speed_value) {
+    let dt = 1 / speed_value * 1000;
+    clearInterval(interval);
+    setInterval(ant_next, dt);
 }
